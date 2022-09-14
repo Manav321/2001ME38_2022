@@ -28,4 +28,14 @@ df["V_avg"] = df["V_avg"].head(1)
 df["W_avg"] = W_avg
 df["W_avg"] = df["W_avg"].head(1)
 
+U_subt_U_avg = (df['U'] - U_avg)
+V_subt_V_avg = (df['V'] - V_avg)
+W_subt_W_avg = (df['W'] - W_avg)
+
+#Subtracting U_avg from U. Similiarly with the others.
+df["U' = U - U_avg"] = U_subt_U_avg
+df["V' = V - V_avg"] = V_subt_V_avg
+df["W' = W - W_avg"] = W_subt_W_avg    
+
+
 df.to_csv("octant_output.csv",index=False)
