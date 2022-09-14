@@ -38,4 +38,47 @@ df["V' = V - V_avg"] = V_subt_V_avg
 df["W' = W - W_avg"] = W_subt_W_avg    
 
 
+octant = []
+
+for i in range(len(df)):
+
+A = df.loc[i, "U' = U - U_avg"]
+B = df.loc[i, "V' = V - V_avg"]
+C = df.loc[i, "W' = W - W_avg"]
+
+    # when U is +ve
+    if A>0:
+        #when V is +ve
+        if B>0:
+            if C>0:
+                octant.append(int(1))
+            else:
+                octant.append(int(-1))
+
+        # when V is -ve
+        else:
+            if C>0:
+                octant.append(int(4))
+            else:
+                octant.append(int(-4))
+
+    # when U is -ve
+    else:
+        # when V is +ve
+        if B>0:
+            if C>0:
+                octant.append(int(2))
+            else:
+                octant.append(int(-2))
+
+        # when V is -ve
+        else:
+            if C>0:
+                octant.append(int(3))
+            else:
+                octant.append(int(-3))
+
+df["Octant"] = octant
+
+
 df.to_csv("octant_output.csv",index=False)
