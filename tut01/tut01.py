@@ -80,5 +80,42 @@ C = df.loc[i, "W' = W - W_avg"]
 
 df["Octant"] = octant
 
+# Printing and tabulating octant data
+top_row = ["", "Octant ID", "1", "-1", "2", "-2", "3", "-3", "4", "-4"]
+for i in range(len(top_row)):
+    df.insert(i+11, top_row[i], value="")
+
+df.iloc[0, 12] = "Overall count"
+
+for i in range(8):
+    df.iloc[0, i+13] = octant.count(int(top_row[2+i]))
+
+
+df.iloc[1, 11] = "User input"
+df.iloc[1, 12] = "Mod " + str(mod)
+
+i=0
+k=3
+df.iloc[2,12] = f"{i}-{i+mod-1}"
+i+=mod
+
+
+while i<len(df):
+    # printing ranges
+    df.iloc[k, 12] = f"{i+1}-{min(i+mod-1, len(df))}"
+    k+=1         # moving to next row k=k+1
+    i+=mod
+
+
+chunk_size = mod
+chunked_list = []
+
+for i in range(0, len(octant), chunk_size):
+    chunked_list.append(octant[i:i+chunk_size])
+
+for m in range(len(chunked_list)):
+    for j in range(8):
+        df.iloc[m+2, j+13] = chunked_list[m].count(int(top_row[2+j]))
+
 
 df.to_csv("octant_output.csv",index=False)
