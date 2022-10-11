@@ -42,9 +42,9 @@ octant = []
 
 for i in range(len(df)):
 
-A = df.loc[i, "U' = U - U_avg"]
-B = df.loc[i, "V' = V - V_avg"]
-C = df.loc[i, "W' = W - W_avg"]
+    A = df.loc[i, "U' = U - U_avg"]
+    B = df.loc[i, "V' = V - V_avg"]
+    C = df.loc[i, "W' = W - W_avg"]
 
     # when U is +ve
     if A>0:
