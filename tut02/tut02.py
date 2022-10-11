@@ -150,9 +150,25 @@ def inserting_value(s_row, s_col, heading, range_,  transverse_list):
         from1 = transverse_list[i]
         to1   = transverse_list[i+1]
 
-        x = octant.index(from1)
-        y = octant.index(to1)
+        x = octants.index(from1)
+        y = octants.index(to1)
 
         df.iloc[s_row+3+x, s_col+1+y]+=1
 
-df.to1excel("output_octant_transition_identify.xlsx",index=False)
+# calling function for overall transition count
+inserting_value(11, 12, "Overall transition count", '', df["Octant"])
+
+row_st = 24
+col_st = 12
+range2 = 0
+
+for i in range(len(chunked_list)):
+
+    range_for_mod_val = f"{range2}-{min(range2+mod-1, len(df))}"
+
+    inserting_value(row_st, col_st, "Mod Transition Count", range_for_mod_val, chunked_list[i])
+
+    range2+=mod
+    row_st += 13
+
+df.to_excel("output_octant_transition_identify.xlsx",index=False)
