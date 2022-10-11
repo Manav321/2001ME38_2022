@@ -7,7 +7,7 @@ ver = python_version()
 if ver == "3.8.10":
     print("Correct Version Installed")
 else:
-    print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
+    print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmnw")
 
 mod=5000
 
@@ -94,17 +94,17 @@ for i in range(8):
 df.iloc[1, 11] = "User input"
 df.iloc[1, 12] = "Mod " + str(mod)
 
-i=0
+x=0
 k=3
-df.iloc[2,12] = f"{i}-{i+mod-1}"
-i+=mod
+df.iloc[2,12] = f"{x}-{x+mod-1}"
+x+=mod
 
 
-while i<len(df):
+while x<len(df):
     # printing ranges
-    df.iloc[k, 12] = f"{i+1}-{min(i+mod-1, len(df))}"
+    df.iloc[k, 12] = f"{x+1}-{min(x+mod-1, len(df))}"
     k+=1         # moving to next row k=k+1
-    i+=mod
+    x+=mod
 
 
 chunk_size = mod
@@ -114,8 +114,8 @@ for i in range(0, len(octant), chunk_size):
     chunked_list.append(octant[i:i+chunk_size])
 
 for m in range(len(chunked_list)):
-    for j in range(8):
-        df.iloc[m+2, j+13] = chunked_list[m].count(int(top_row[2+j]))
+    for n in range(8):
+        df.iloc[m+2, n+13] = chunked_list[m].count(int(top_row[2+n]))
 
 
 df.to_csv("octant_output.csv",index=False)
