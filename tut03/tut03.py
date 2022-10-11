@@ -89,7 +89,7 @@ data = {
         "freq" : {"1"  : 0,"-1" : 0,"2"  : 0,"-2" : 0,"3"  : 0,"-3" : 0,"4"  : 0,"-4" : 0,}
         }
 
-def ol_subsequence_count(): # octant longest subsequence count
+def o_l_subsequence_count(): # octant longest subsequence count
     l_of_string = 1   # length of string
     for i in range(len(df) - 1):
 
@@ -116,3 +116,20 @@ def ol_subsequence_count(): # octant longest subsequence count
 
         else:
             l_of_string = 1
+
+    df.insert(11, "", value="")
+    df.insert(12, "Count", value="")
+    df.insert(13, "Longest Subsequence Length", value="")
+    df.insert(14, "Frequency", value="")
+
+    # inserting values
+    for i in range(8):
+        df.iloc[i,12] = data["octants"][i]
+        df.iloc[i,13] = data["length_of_longest_s"][ data["octants"][i] ]
+        df.iloc[i,14] = data["freq"][ data["octants"][i] ]
+
+o_l_subsequence_count()
+
+df.to_excel('output_octant_longest_subsequence.xlsx', index=False)
+
+#---------finished---------------------------------------------------------------------------------------------------------
