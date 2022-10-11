@@ -98,8 +98,21 @@ def ol_subsequence_count(): # octant longest subsequence count
             l_of_string+=1
 
             # update the longest subsequence by comparing existing value and current length
-            data["l_of_longest_s"][str(df["Octant"][i])] = max(data["l_of_longest_s"][str(df["Octant"][i])], l_of_string)
+            data["length_of_longest_s"][str(df["Octant"][i])] = max(data["length_of_longest_s"][str(df["Octant"][i])], l_of_string)
 
         #elements are different, reset l_of_string
+        else:
+            l_of_string = 1
+
+#frequency of longest subsequence
+    l_of_string = 1
+    for i in range(len(df) - 1):
+        if df["Octant"][i] == df["Octant"][i+1]:
+            l_of_string+=1
+
+            #current length of subsequence is equal to longest, increament the frequency by one
+            if l_of_string == data["length_of_longest_s"][str(df["Octant"][i])]:
+                data["freq"][str(df["Octant"][i])]+=1
+
         else:
             l_of_string = 1
