@@ -121,8 +121,8 @@ for m in range(len(chunked_list)):
 octants = [1, -1, 2, -2, 3, -3, 4, -4]
 
 
-#function to make skeleton
-def make_table(s_row, s_col, heading, range_):
+#function to make skeleton of table
+def tabulate(s_row, s_col, heading, range_):
 
     df.iloc[s_row, s_col] = heading
     df.iloc[s_row+3, s_col-1] = "From"
@@ -140,4 +140,19 @@ def make_table(s_row, s_col, heading, range_):
         for j in range(8):
             df.iloc[s_row+3+i, s_col+1+j]=0
 
-df.to_excel("output_octant_transition_identify.xlsx",index=False)
+
+# function to insert values 
+def inserting_value(s_row, s_col, heading, range_,  transverse_list):
+    # make the basic skeleton of the table
+    tabulate(s_row, s_col, heading, range_)
+
+    for i in range(len(transverse_list)-1):
+        from1 = transverse_list[i]
+        to1   = transverse_list[i+1]
+
+        x = octant.index(from1)
+        y = octant.index(to1)
+
+        df.iloc[s_row+3+x, s_col+1+y]+=1
+
+df.to1excel("output_octant_transition_identify.xlsx",index=False)
