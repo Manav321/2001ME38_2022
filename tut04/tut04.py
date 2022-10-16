@@ -140,7 +140,31 @@ def o_l_subsequence_count(): # octant longest subsequence count
     df.iloc[9, 13] = "Longest Subsequence Length"
     df.iloc[9, 14] = "Frequency"
 
-o_l_subsequence_count()
+
+    start_row = 10    #row from which cursor will start
+    for oc in data["octants"]:
+
+        df.iloc[start_row, 12] = oc
+        df.iloc[start_row, 13] = data["length_of_longest_s"][oc]
+        df.iloc[start_row, 14] = data["freq"][oc]
+
+        df.iloc[start_row+1, 12] = "Time"
+        df.iloc[start_row+1, 13] = "From"
+        df.iloc[start_row+1, 14] = "To"
+
+        for j in range(len(data["end_time"][oc])):
+
+            # starting time will be "length of longest subsequence" steps earlier than ending time
+            df.iloc[start_row+2+j, 13] = data["end_time"][oc][j] - 0.01*(data["length_of_longest_s"][oc] - 1)
+            df.iloc[start_row+2+j, 14] = data["end_time"][oc][j]
+
+
+        # update the starting row for next octant
+        start_row += len(data["end_time"][oc]) + 3
+
+
+
+o_l_subsequence_count()                   #CALLING THE FUNCTION
 
 df.to_excel('output_octant_longest_subsequence_with_range.xlsx', index=False)
 end_time = datetime.now()
