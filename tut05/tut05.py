@@ -132,6 +132,44 @@ def rank_(row):
             
             return oc  # returning rank 1 octant
 
+def octant_range_names(mod=5000):
+
+    #Printing and tabulating overall octant data
+    df.at[0, "Octant ID"] = "Overall count"
+    
+
+    for oc in octant:
+        # insert the count of octant obtained from df["Octant"] in the first row of corresponding octant column
+        df.at[0, oc] = (list(df["Octant"])).count(oc)
+    
+    rank_(0)
+    #--------------------------------------------------
+    
+    df.at[1, ""] = "User input"
+    df.at[1, "Octant ID"] = "Mod " + str(mod)
+    
+    k=2
+    # printing ranges
+    for i in range(0, len(df), mod):
+        df.at[k, "Octant ID"] = f"{i}-{min(i+mod-1, len(df))}"
+
+        k+=1
+    
+    chunk_s = mod
+    chunnked_l = []
+    
+    # chunnked_l is a list of lists
+    for i in range(0, len(df), chunk_s):
+        chunnked_l.append(list(df["Octant"])[i:i+chunk_s])
+    
+    # printing the counts at their positions
+    for m in range(len(chunnked_l)):
+        for oc in octant:
+            df.at[m+2, oc] = chunnked_l[m].count(oc)
+
+        # call the rank_ function to rank octant and also increase the freq of getting ranked one, by one
+        octant_name_id_mapping[str(rank_(m+2))][1]+=1
+
 
 from platform import python_version
 ver = python_version()
@@ -146,7 +184,7 @@ else:
 
 headings()
 octant_identity()
-#octant_range_names(mod)
+octant_range_names(mod)
 
 
 df.to_excel('octant_output_rank__excel.xlsx', index=False)
