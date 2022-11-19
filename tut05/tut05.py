@@ -170,6 +170,16 @@ def octant_range_names(mod=5000):
         # call the rank_ function to rank octant and also increase the freq of getting ranked one, by one
         octant_name_id_mapping[str(rank_(m+2))][1]+=1
 
+def count_rank_1():
+    df.at[13, "Octant ID"] = "Octant ID"
+    df.at[13, 1] = "Octant Name"
+    df.at[13, 2] = "Count of Rank 1 Mod Value"
+
+    for i in range(8):
+        df.at[14+i, "Octant ID"] = octant[i]
+        df.at[14+i, 1] = octant_name_id_mapping[str(octant[i])][0]
+        df.at[14+i, 2] = octant_name_id_mapping[str(octant[i])][1]
+
 
 from platform import python_version
 ver = python_version()
@@ -185,6 +195,7 @@ else:
 headings()
 octant_identity()
 octant_range_names(mod)
+count_rank_1()
 
 
 df.to_excel('octant_output_rank__excel.xlsx', index=False)
