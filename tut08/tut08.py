@@ -139,7 +139,141 @@ for i in pak_lines:
             ind_bowl[f"{cb[0].strip()}"][5] += 1
 
 
+for i in pak_bat.values():
+    i[-1]=round((i[0]/i[1])*100 , 2)
 
+
+for i in ind_lines:
+    x = i.index(".")
+    ind_over=i[0:x+2]
+
+    temp = i[x + 2::].split(",")
+
+    cb = temp[0].split("to")
+    if f"{cb[0].strip()}" not in pak_bowl.keys():
+        pak_bowl[f"{cb[0].strip()}"]=[1,0,0,0,0,0,0]
+
+    elif "wide" in temp[1]:
+        pass
+
+    elif "bye" in temp[1]:
+        if "FOUR" in temp[2]:
+            ind_b += 4
+        elif "1" in temp[2]:
+            ind_b += 1
+        elif "2" in temp[2]:
+            ind_b += 2
+        elif "3" in temp[2]:
+            ind_b += 3
+        elif "4" in temp[2]:
+            ind_b += 4
+        elif "5" in temp[2]:
+            ind_b += 5
+
+    else:
+        pak_bowl[f"{cb[0].strip()}"][0] += 1
+    
+    if f"{cb[1].strip()}" not in ind_bat.keys() and temp[1] != "wide":
+        ind_bat[f"{cb[1].strip()}"]=[0,1,0,0,0]
+
+    elif "wide" in temp[1] :
+        pass
+
+    else:
+        ind_bat[f"{cb[1].strip()}"][1] += 1
+    
+    if "out" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][3] += 1
+        
+        if "Bowled" in temp[1].split("!!")[0]:
+            ind_out[f"{cb[1].strip()}"] = ("b" + cb[0])
+
+        elif "Caught" in temp[1].split("!!")[0]:
+            w=(temp[1].split("!!")[0]).split("by")
+            ind_out[f"{cb[1].strip()}"] = ("c" + w[1] +" b " + cb[0])
+
+        elif "Lbw" in temp[1].split("!!")[0]:
+            ind_out[f"{cb[1].strip()}"] = ("lbw  b "+ cb[0])
+
+    if "no run" in temp[1] or "out" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 0
+        ind_bat[f"{cb[1].strip()}"][0] += 0
+
+    elif "1 run" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 1
+        ind_bat[f"{cb[1].strip()}"][0] += 1
+
+    elif "2 run" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 2
+        ind_bat[f"{cb[1].strip()}"][0] += 2
+
+    elif "3 run" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 3
+        ind_bat[f"{cb[1].strip()}"][0] += 3
+
+    elif "4 run" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 4
+        ind_bat[f"{cb[1].strip()}"][0] += 4
+
+    elif "FOUR" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 4
+        ind_bat[f"{cb[1].strip()}"][0] += 4
+        ind_bat[f"{cb[1].strip()}"][2] += 1
+
+    elif "SIX" in temp[1]:
+        pak_bowl[f"{cb[0].strip()}"][2] += 6
+        ind_bat[f"{cb[1].strip()}"][0] += 6
+        ind_bat[f"{cb[1].strip()}"][3] += 1
+
+    elif "wide" in temp[1]:
+        if "wides" in temp[1]:
+            pak_bowl[f"{cb[0].strip()}"][2] += int(temp[1][1])
+            pak_bowl[f"{cb[0].strip()}"][5] += int(temp[1][1])
+
+        else:
+            pak_bowl[f"{cb[0].strip()}"][2] += 1
+            pak_bowl[f"{cb[0].strip()}"][5] += 1
+
+
+for z in ind_bat.values():
+    z[-1] = round((z[0]/z[1])*100 , 2)
+
+for z in pak_bat.values():
+    z[-1] = round((z[0]/z[1])*100 , 2)
+
+for z in ind_bowl.values():
+    if z[0]%6 == 0:
+        z[0] = z[0]//6
+    else:
+        z[0] = (z[0]//6) + (z[0]%6)/10
+
+for z in pak_bowl.values():
+    if z[0]%6 == 0:
+        z[0] = z[0]//6
+    else:
+        z[0] = (z[0]//6) + (z[0]%6)/10
+
+for z in ind_bowl.values():
+    x = str(z[0])
+    if "." in x:
+        balls = int(x[0])*6 + int(x[2])
+        z[-1] = round((z[2]/balls)*6,1)
+
+    else:
+        z[-1] = round((z[2]/z[0]) ,1) 
+
+
+for z in pak_bowl.values():
+    x = str(z[0])
+    if "." in x:
+        balls = int(x[0])*6 + int(x[2])
+        z[-1] = round((z[2]/balls)*6,1)
+
+    else:
+        z[-1] = round((z[2]/z[0]) ,1)
+
+
+	 
 from platform import python_version
 ver = python_version()
 
