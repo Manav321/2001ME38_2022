@@ -232,6 +232,150 @@ def oct_rank(mod, file_name):                                         # Calculat
 def octant_analysis(mod=5000):
 	pass
 
+
+def octant_transition(mod, df):                                                # Evaluates the transition values
+    
+    try:
+        rows = df.shape[0]
+        st = mod
+        cols = df.shape[1]
+        df.insert(cols, column = "                     ", value = "")
+
+        cols = cols + 1
+
+    except:
+        print("Error: Input file cannot be read!")
+    
+    try:
+        for i in range(2, 12):
+            blank = ""
+
+            for i in range(1, i + 1):
+                blank += " "
+            df.insert(cols, column = blank, value = "")
+            cols = cols + 1
+
+        dict_1 = {}
+        blank_len = 4
+
+        for i in range(1, 5):
+            blank = ""
+            for indx in range(0, blank_len):
+                blank += " "
+
+            dict_1[str(i)] = blank
+            blank_len += 1
+            blank = ""
+
+            for indx in range(0, blank_len):
+                blank += " "
+
+            dict_1[str(-1*i)] = blank
+            blank_len += 1
+
+        dict_1['f'] = '  '
+        dict_1['s'] = '   '
+        
+        indx = 0
+        df.at[indx, dict_1['1']] = 'To'
+        indx = indx + 1
+
+        df.at[indx, dict_1['s']] = 'Count'
+        for k in range(-4, 5):
+            if k == 0:
+                continue
+
+            df.at[indx, dict_1[str(k)]] = k
+        indx = indx + 1
+        df.at[indx, dict_1['f']] = "From"
+
+        data = []
+        df_1 = pd.DataFrame(data, index = ['1','-1','2','-2','3','-3','4','-4'],
+                        columns = ['1','-1','2','-2','3','-3','4','-4'])
+        df_1 = df_1.fillna(0)
+
+        for i in range(0, rows - 1):
+            first = str(df.at[i, 'Octant'])
+            second = str(df.at[i + 1, 'Octant'])
+            df_1.at[first, second] += 1
+
+        for i in range (1, 5):
+            df.at[indx, dict_1['s']] = str(i)
+            for j in range (-4, 5):
+                if j == 0:
+                    continue
+                df.at[indx, dict_1[str(j)]] = df_1.at[str(i), str(j)]
+            indx = indx + 1
+
+            df.at[indx, dict_1['s']] = str(-1*i)
+            for j in range (-4, 5):
+                if j == 0:
+                    continue
+                df.at[indx, dict_1[str(j)]] = df_1.at[str(-1*i), str(j)]
+            indx = indx + 1
+
+    except Exception as e:
+        print("Error! Not Expected", e)
+
+    for i in range(0, rows, st):
+        val = i + st
+        if val >= rows:
+            val = rows
+
+        indx = indx + 2
+        df.at[indx, dict_1['s']] = 'Mod Transition Count'
+        indx = indx + 1
+
+        df.at[indx, dict_1['s']] = str(i) + '-' + str(val - 1)
+        df.at[indx, dict_1['1']] = 'To'
+        indx = indx + 1
+
+        df.at[indx, dict_1['s']] = 'Octant #'
+        for k in range(-4, 5):
+            if k == 0:
+                continue
+            df.at[indx, dict_1[str(k)]] =  k
+        indx = indx + 1
+        df.at[indx, dict_1['f']] = "From"
+
+        data = []
+        df_1 = pd.DataFrame(data, index = ['1','-1','2','-2','3','-3','4','-4'],
+                        columns = ['1','-1','2','-2','3','-3','4','-4'])
+        df_1 = df_1.fillna(0)
+
+        if val == rows:
+            val = val - 1
+
+        for j in range(i, val):
+            first = str(df.at[j,'Octant'])
+            second = str(df.at[j+1, 'Octant'])
+            df_1.at[first, second] += 1
+
+        for k in range (1, 5):
+            df.at[indx, dict_1['s']] = str(k)
+            for l in range (-4, 5):
+                if l == 0:
+                    continue
+                df.at[indx, dict_1[str(l)]] = df_1.at[str(k), str(l)]
+            indx = indx + 1
+            df.at[indx, dict_1['s']] = str(-1*k)
+
+            for l in range (-4, 5):
+                if l == 0:
+                    continue
+                df.at[indx, dict_1[str(l)]] = df_1.at[str(-1*k), str(l)]
+            indx = indx + 1
+    
+
+    try:
+        return df
+
+    except Exception as e:    
+        print("Error: Could not write to destination file!", e)
+
+
+
+		
 ##Read all the excel files in a batch format from the input/ folder. Only xlsx to be allowed
 ##Save all the excel files in a the output/ folder. Only xlsx to be allowed
 ## output filename = input_filename[_octant_analysis_mod_5000].xlsx , ie, append _octant_analysis_mod_5000 to the original filename. 
