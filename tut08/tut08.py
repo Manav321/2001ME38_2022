@@ -273,7 +273,136 @@ for z in pak_bowl.values():
         z[-1] = round((z[2]/z[0]) ,1)
 
 
-	 
+pak_Batter = []
+for key in pak_bat.keys():
+    pak_Batter.append(key)
+
+for i in range(len(pak_bat)):
+    sheet.cell(5 + i, 1).value = pak_Batter[i]
+    sheet.cell(5 + i, 5).value = pak_bat[pak_Batter[i]][0]
+    sheet.cell(5 + i, 6).value = pak_bat[pak_Batter[i]][1]
+    sheet.cell(5 + i, 7).value = pak_bat[pak_Batter[i]][2]
+    sheet.cell(5 + i, 8).value = pak_bat[pak_Batter[i]][3]
+    sheet.cell(5 + i, 9).value = pak_bat[pak_Batter[i]][4]
+
+    if pak_Batter[i] not in pak_out:
+        sheet.cell(5+i,3).value = "not out"
+    else:
+        sheet.cell(5+i,3).value=pak_out[pak_Batter[i]]
+
+sheet.cell(3,1).value = "BATTERS"                                      # Just headings 
+sheet["E3"] = "RUNS"
+sheet["F3"] = "BALLS"
+sheet["G3"] = " 4s "
+sheet["H3"] = " 6s "
+sheet["I3"] = "  SR  "
+
+
+sheet["A18"] = "BOWLER"
+sheet["C18"] = "OVER"
+sheet["D18"] = "MAIDEN"
+sheet["E18"] = "RUNS"
+sheet["F18"] = "WICKET"
+sheet["G18"] = "NO-BALL"
+sheet["H18"] = "WIDE"
+sheet["I18"] = "ECONOMY"
+
+pak_bowlers = []
+for key in pak_bowl.keys():
+    pak_bowlers.append(key)
+
+for i in range(len(pak_bowl)):                                          # input scores
+    sheet.cell(42 + i, 1).value = pak_bowlers[i]
+    sheet.cell(42 + i, 3).value = pak_bowl[pak_bowlers[i]][0]
+    sheet.cell(42 + i, 4).value = pak_bowl[pak_bowlers[i]][1]
+    sheet.cell(42 + i, 5).value = pak_bowl[pak_bowlers[i]][2]
+    sheet.cell(42 + i, 6).value = pak_bowl[pak_bowlers[i]][3]
+    sheet.cell(42 + i, 7).value = pak_bowl[pak_bowlers[i]][4]
+    sheet.cell(42 + i, 8).value = pak_bowl[pak_bowlers[i]][5]
+    sheet.cell(42 + i, 9).value = pak_bowl[pak_bowlers[i]][6]
+    total_bowler_pak += pak_bowl[pak_bowlers[i]][2]
+    ind_wickets += pak_bowl[pak_bowlers[i]][3]
+
+
+sheet.cell(11 + len(pak_bat) + len(pak_bowl), 1).value = "# INDIA"
+sheet.cell(11 + len(pak_bat) + len(pak_bowl), 2).value = " INNINGS"
+
+ind_batters = []
+for key in ind_bat.keys():
+    ind_batters.append(key)
+
+for i in range(len(ind_bat)):
+    sheet.cell(31 + i, 1).value = ind_batters[i]
+    sheet.cell(31 + i, 5).value = ind_bat[ind_batters[i]][0]
+    sheet.cell(31 + i, 6).value = ind_bat[ind_batters[i]][1]
+    sheet.cell(31 + i, 7).value = ind_bat[ind_batters[i]][2]
+    sheet.cell(31 + i, 8).value = ind_bat[ind_batters[i]][3]
+    sheet.cell(31 + i, 9).value = ind_bat[ind_batters[i]][4]
+
+    if ind_batters[i] not in ind_out:
+        sheet.cell(31 + i, 3).value = "not out"
+    else:
+        sheet.cell(31 + i, 3).value=ind_out[ind_batters[i]]
+
+sheet["A29"] = "BATTERS"
+sheet["E29"] = "RUNS"
+sheet["F29"] = "BALLS"
+sheet["G29"] = " 4s "
+sheet["H29"] = " 6s "
+sheet["I29"] = "  SR  "
+
+
+sheet["A40"] = "BOWLER"
+sheet["C40"] = "OVER"
+sheet["D40"] = "MAIDEN"
+sheet["E40"] = "RUNS"
+sheet["F40"] = "WICKET"
+sheet["G40"] = "NO-BALL"
+sheet["H40"] = "WIDE"
+sheet["I40"] = "ECONOMY"
+
+ind_bowlers = []
+for key in ind_bowl.keys():
+    ind_bowlers.append(key)
+
+for i in range(len(ind_bowl)):
+
+    sheet.cell(20 + i, 1).value = ind_bowlers[i]
+    sheet.cell(20 + i, 3).value = ind_bowl[ind_bowlers[i]][0]
+    sheet.cell(20 + i, 4).value = ind_bowl[ind_bowlers[i]][1]
+    sheet.cell(20 + i, 5).value = ind_bowl[ind_bowlers[i]][2]
+    sheet.cell(20 + i, 6).value = ind_bowl[ind_bowlers[i]][3]
+    sheet.cell(20 + i, 7).value = ind_bowl[ind_bowlers[i]][4]
+    sheet.cell(20 + i, 8).value = ind_bowl[ind_bowlers[i]][5]
+    sheet.cell(20 + i, 9).value = ind_bowl[ind_bowlers[i]][6]
+    total_bowler_ind += ind_bowl[ind_bowlers[i]][2]
+    pak_wickets += ind_bowl[ind_bowlers[i]][3]
+
+
+ind_total_score = total_bowler_ind + pak_b                                   # Total Score
+pak_total_score = total_bowler_pak + ind_b
+
+sheet["E27"] = " " + str(ind_total_score) + " - " + str(ind_wickets)
+sheet["F27"] = str(ind_over)
+Eone = " " + str(pak_total_score) + " - " + str(pak_wickets)
+Fone = str(pak_over)
+
+
+wb.save("Scoreboard.xlsx")                                                   # Writing the pak_outut in csv format
+df = pd.read_excel('Scoreboard.xlsx')
+df = df.set_axis(['PAKISTAN', ' INNINGS'] + [" ", " ", Eone, Fone, " ", " ", " "], axis = 'columns')
+df.to_csv('Scorecard.csv', index = False)
+
+
+try:
+    os.path.exists("Scoreboard.xlsx") 
+    os.remove("Scoreboard.xlsx")
+
+except:
+    print("Unexpected Error!")
+
+
+
 from platform import python_version
 ver = python_version()
 
