@@ -515,7 +515,7 @@ def octant_analysis(mod):                                                       
         sheet = w_s.active
 
 		
-        pattern_fill = PatternFill(pattern_type = "solid", fgColor = "FFFF33")                        # Edits files
+        pattern_fill = PatternFill(patternType = "solid", fgColor = "FFFF33")                        # Edits files
         sheet['L1'].value = ""
         sheet['AG1'].value = ""
         sheet['AH1'].value = ""
