@@ -373,9 +373,127 @@ def octant_transition(mod, df):                                                #
     except Exception as e:    
         print("Error: Could not write to destination file!", e)
 
+def octant_subsequence(mod, df, file_name):                                                      # Evaluates the longest subsequences for all values of octants
+
+    try:
+        rows = df.shape[0]
+        cols = df.shape[1]
+        df.insert(cols, column = "                   ", value = "")
+        cols = cols + 1
+
+    except Exception as e:
+        print("Error: Cannot read input file!", e)
+    
+    try:
+        data = []
+        df_1 = pd.DataFrame(data, index=['1','-1','2','-2','3','-3','4','-4'],
+                       columns=['Len', 'Count'])
+        df_1 = df_1.fillna(0)
+        
+        df3 = pd.DataFrame(data, columns=['1','-1','2','-2','3','-3','4','-4'])
+        
+        prev = df.at[0, 'Octant']
+        df_1.at[str(prev), 'Len'] = 1
+        cur_l = 1
+
+        a = df.at[0, 'T']
+        b = df.at[0, 'T']
+
+        for indx in range(1, rows):
+            cur = df.at[indx, 'Octant']
+            if (cur == prev):
+                cur_l = cur_l + 1
+            else:
+                cur_l = 1
+                a = df.at[indx, 'T']
+
+            b = df.at[indx, 'T']
+            df4 = df3.count(axis=0)
+
+            if (cur_l == df_1.at[str(cur), 'Len']):
+                df_1.at[str(cur), 'Count'] += 1                
+                df3.at[df4[str(cur)], str(cur)] = a
+                df3.at[df4[str(cur)]+1, str(cur)] = b
+
+            elif(cur_l > df_1.at[str(cur), 'Len']):
+                df_1.at[str(cur), 'Count'] = 1
+                del df3[str(cur)]
+                df3.insert(7, column = str(cur), value = "")
+                df3.at[0, str(cur)] = a
+                df3.at[1, str(cur)] = b
+
+            df3.replace('', np.nan, inplace = True)
+            df_1.at[str(cur), 'Len'] = max(cur_l, df_1.at[str(cur), 'Len'])
+            prev = cur
 
 
-		
+        indx = 0
+
+        for i in range(1, 5):
+            df.at[indx, 'Octant ##'] = str(i)
+            df.at[indx, 'Longest Subsequence Length'] = df_1.at[str(i), 'Len']
+            df.at[indx, 'Count'] = df_1.at[str(i), 'Count']
+            indx = indx + 1
+
+            df.at[indx, 'Octant ##'] = str(-1*i)
+            df.at[indx, 'Longest Subsequence Length'] = df_1.at[str(-1*i), 'Len']
+            df.at[indx, 'Count'] = df_1.at[str(-1*i), 'Count']
+            indx = indx + 1
+            
+        cols = df.shape[1]
+        df.insert(cols, column = "                         ", value = "")
+
+
+        indx = 0
+
+        for i in range(1, 5):
+            df.at[indx, 'Octant ###'] = str(i)
+            df.at[indx, 'Longest Subsequence Length '] = df_1.at[str(i), 'Len']
+            df.at[indx, 'Count '] = df_1.at[str(i), 'Count']
+            indx = indx + 1
+
+            df.at[indx, 'Octant ###'] = "Time"
+            df.at[indx, 'Longest Subsequence Length '] = "From"
+            df.at[indx, 'Count '] = "To"
+            indx = indx + 1
+
+            for index in range(0, len(df3[str(i)]), 2):
+                if np.isnan(df3.at[index, str(i)]):
+                    break
+
+                df.at[indx, 'Longest Subsequence Length '] = df3.at[index, str(i)]
+                df.at[indx, 'Count '] = df3.at[index+1, str(i)]
+                indx = indx + 1
+            
+            df.at[indx, 'Octant ###'] = str(-1*i)
+            df.at[indx, 'Longest Subsequence Length '] = df_1.at[str(-1*i), 'Len']
+            df.at[indx, 'Count '] = df_1.at[str(-1*i), 'Count']
+            indx = indx + 1
+
+            df.at[indx, 'Octant ###'] = "Time"
+            df.at[indx, 'Longest Subsequence Length '] = "From"
+            df.at[indx, 'Count '] = "To"
+            indx = indx + 1
+            
+            for index in range(0, len(df3[str(-1*i)]), 2):
+                if np.isnan(df3.at[index, str(-1*i)]):
+                    break
+
+                df.at[indx, 'Longest Subsequence Length '] = df3.at[index, str(-1*i)]
+                df.at[indx, 'Count '] = df3.at[index+1, str(-1*i)]
+                indx = indx + 1
+
+    except Exception as e:
+        print("Error! Not Expected", e)
+    
+    try:
+        df.to_excel(f'E:\\GitHub\\2001ME38_2022\\tut07\\output\\{file_name[0:len(file_name)-5]}_vel_octant_analysis_mod_{mod}.xlsx', index = False)
+        return df
+
+    except Exception as e:
+        print("Error: Cannot write to output file!", e)
+
+
 ##Read all the excel files in a batch format from the input/ folder. Only xlsx to be allowed
 ##Save all the excel files in a the output/ folder. Only xlsx to be allowed
 ## output filename = input_filename[_octant_analysis_mod_5000].xlsx , ie, append _octant_analysis_mod_5000 to the original filename. 
