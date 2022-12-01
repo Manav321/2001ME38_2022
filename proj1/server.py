@@ -36,8 +36,8 @@ def signup(username, password, client, email):
 
 
 # Connection Data
-host = '172.16.185.133'
-port = 5050
+host = '192.168.214.26'
+port = 5051
 
 # Starting Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,11 +65,26 @@ def handle(client):
         try:
             # Broadcasting Messages
             message = client.recv(1024)
-            broadcast(message)
-            i = historyData.max_row+1
-            historyData.cell(i,1).value = datetime.datetime.now()
-            historyData.cell(i,2).value = message.decode().split(': ')[0]
-            historyData.cell(i,3).value = message.decode().split(': ')[1]
+
+            if message == 'GIVE'.encode('ascii'):
+                # active_users = str(nicknames)
+                # client.send(active_users.encode())
+                ##################################
+                # active_users = ','.join(nicknames)
+                # print(active_users)
+                # client.send('Done'.encode('ascii'))
+                # client.send(active_users.encode('ascii'))
+                ####################################################
+                for user in nicknames:
+                    client.send(user.encode('ascii'))
+                
+            
+            else:   
+                broadcast(message)
+                i = historyData.max_row+1
+                historyData.cell(i,1).value = datetime.datetime.now()
+                historyData.cell(i,2).value = message.decode().split(': ')[0]
+                historyData.cell(i,3).value = message.decode().split(': ')[1]
         
         except:
             # Removing And Closing Clients
@@ -120,7 +135,7 @@ def receive():
 
         if flag:
             # adding the username in the list
-            nicknames.append(nickname)
+            nicknames.append('User:'+ nickname)
             clients.append(client)
 
             #showing connection message

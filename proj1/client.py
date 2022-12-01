@@ -7,15 +7,13 @@ from tkinter import filedialog
 from tkinter import messagebox
 import tkinter.scrolledtext
 from tkinter import simpledialog
-import pickle
-import datetime
-import os
 import threading
-import struct
-from httpx import main
+import pickle
+
+
 
 from pygments import highlight
-from sympy import comp
+
 
 # ==================================================
 
@@ -30,7 +28,7 @@ class App(tk.Tk):
         # connecting to server
         try:
             self.sock = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
-            self.sock.connect(('172.16.185.133', 5050))
+            self.sock.connect(('192.168.214.26', 5051))
 
         # will pop up error box if not connected to server
         except ConnectionRefusedError:
@@ -218,7 +216,7 @@ class App(tk.Tk):
         mainChat.bgLabel3 = tkinter.Label(mainChat, image = mainChat.background1)
         mainChat.bgLabel3.place(x = 0, y = 0)
 
-        mainChat_label = tkinter.Label(mainChat, text = "Welcome" + " " + UserName, bg = "lightgray")
+        mainChat_label = tkinter.Label(mainChat, text = "Welcome" + " : " + UserName, bg = "lightgray")
         mainChat_label.config(font = ("Arial", 12))
         mainChat_label.grid(padx = 20, pady = 5, row = 0, column = 0, columnspan = 5)
 
@@ -231,14 +229,14 @@ class App(tk.Tk):
         mainText_area.grid(padx = 10, pady = 5, row = 2, column = 0, columnspan = 4, rowspan = 6)
         mainText_area.config(state='disabled')
 
-        active_label = tkinter.Label(mainChat, text = "Active Users", bg = "lightgray")
-        active_label.config(font = ("Arial", 12))
-        active_label.grid(padx = 20, pady = 5, row = 2, column = 4)
+        active_button = tkinter.Button(mainChat, text = "Active Users", cursor="hand2", command = self.ask)
+        active_button.config(font = ("Arial", 12))
+        active_button.grid(padx = 20, pady = 5, row = 2, column = 4)
 
         global user_area
         user_area = tkinter.Listbox(mainChat)
         user_area.grid(padx = 20, pady = 5, row = 3, column = 4, rowspan = 5)
-        user_area.insert(END, f"{UserName}")
+        #user_area.insert(END, f"{UserName}")
         # user_area.config(state='disabled')
 
         msg_label = tkinter.Label(mainChat, text="Message:", bg="lightgray")
@@ -274,6 +272,19 @@ class App(tk.Tk):
         self.sock.send(message.encode('ascii'))
         input_area.delete('1.0', 'end')
 
+    # ****************************************************************************
+
+    def ask(self):
+        self.sock.send('GIVE'.encode('ascii'))
+        # received_data = self.sock.recv(4096).decode('ascii')
+        # received_data = received_data.decode('ascii')
+        # print(received_data)
+        # users_data = received_data.split(',')
+        # print(users_data)
+        # users_data = eval(users_data)
+        # for users in users_data:
+        #     print(users)
+        #     user_area.insert(END, users)
 
     # ****************************************************************************
 
@@ -300,6 +311,24 @@ class App(tk.Tk):
                     print(message)
                     self.openNewWindow()
                     messagebox.showinfo(title="Welcome to Chat room", message="You Have been registered, enjoy your chatting😉")
+
+                elif 'User' in message:
+                    print(message)
+                    user_area.insert(END, message)
+
+                    ##########################################################
+                    # received_data = self.sock.recv(4096).decode('ascii')
+                    # # received_data = received_data.decode('ascii')
+                    # print(received_data)
+                    # users_data = received_data.split(',')
+                    # print(users_data)
+                    # # users_data = eval(users_data)
+                    # for users in users_data:
+                    #     print(users)
+                    #     user_area.insert(END, users)
+                    ###############################################################
+
+
 
                 else:
                     if self.gui_done:
